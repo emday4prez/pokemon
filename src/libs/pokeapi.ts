@@ -24,7 +24,7 @@ export async function loadPokemon(url:string) {
 
   const response = await fetch(url)
   const json = await response.json()
-  console.log('load poke',json)
+
   const name = json.name
   const image = json.sprites.other['official-artwork'].front_default || json.sprites.front_default
   return { name, image}

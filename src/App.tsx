@@ -1,7 +1,8 @@
-import "./App.css";
-import { Mockup } from "./components/mockup";
-import {listPokemon, loadPokemon} from '../src/libs/pokeapi'
-import React, {useState, useEffect} from 'react'
+import './App.css'
+import { Mockup } from './components/mockup'
+import { listPokemon, loadPokemon } from '../src/libs/pokeapi'
+import { useState, useEffect } from 'react'
+import Pokemon from './components/Pokemon'
 /**
  * Instructions:
  *
@@ -34,49 +35,43 @@ function App() {
   const [pokemon, setPokemon] = useState<any>({})
   const [selectedPokemon, setSelectedPokemon] = useState(null)
   const [loadedPokemon, setLoadedPokemon] = useState({})
-  const onSelect = (e:any) => {
+  const onSelect = (e: any) => {
     setSelectedPokemon(e.target.value)
-    console.log('selected pokemon',selectedPokemon)
-
-   
-   
+    console.log('selected pokemon', selectedPokemon)
   }
   useEffect(() => {
     listPokemon().then(data => {
-      console.log(data)
       setPokemon(data)
       setSelectedPokemon(data.results?.[0].url)
     })
-    
-    
-    
-    
-  },[])
+  }, [])
 
   useEffect(() => {
-    
-     if(selectedPokemon){
-       loadPokemon(selectedPokemon).then(loadedData => setLoadedPokemon(loadedData))
-      
+    if (selectedPokemon) {
+      loadPokemon(selectedPokemon).then(loadedData => setLoadedPokemon(loadedData))
     }
-   
   }, [selectedPokemon])
-  
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">Pokémon</h1>
+    <div className='flex flex-col items-center justify-center min-h-screen'>
+      <div className='w-[75%] flex flex-col items-center  border-4 border-indigo-500 p-8'>
+        <h1 className='text-3xl font-bold underline'>Pokémon</h1>
         <div>
-          <select onChange={onSelect} name="pokemon" id="pokemon">
-            {pokemon?.results?.map((poke:any) => {
+          <Pokemon name={loadedPokemon.name} img={loadedPokemon.image} />
+          <select onChange={onSelect} className='w-1/3' name='pokemon' id='pokemon'>
+            {pokemon?.results?.map((poke: any) => {
               return (
-                <option value={poke.url} key={poke.name}>{poke.name}</option>
+                <option value={poke.url} key={poke.name}>
+                  {poke.name}
+                </option>
               )
             })}
           </select>
         </div>
-      <Mockup name={loadedPokemon.name} image={loadedPokemon.image} />
+        {/* <Mockup name={loadedPokemon.name} image={loadedPokemon.image} /> */}
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
