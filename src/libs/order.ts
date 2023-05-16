@@ -13,24 +13,6 @@ export function orderPokemon(pokemon: any) {
   }
   const pokemonNames = pokemon?.results?.map((poke: any) => poke.name)
 
-  // Pikachu (always #1)
-  const pikachuIndex = pokemonNames?.indexOf('pikachu')
-  console.log(pikachuIndex)
-  if (pikachuIndex !== -1) {
-    const pikachu = pokemonNames.splice(pikachuIndex, 1)
-    pokemonNames.unshift(pikachu[0])
-  }
-
-  // Pokemon whose name starts with "char"
-  const charStartNames = pokemonNames.filter(name => name.startsWith('char'))
-  charStartNames.forEach(name => {
-    const index = pokemonNames.indexOf(name)
-    if (index !== -1) {
-      const pokemon = pokemonNames.splice(index, 1)
-      pokemonNames.splice(1, 0, pokemon[0])
-    }
-  })
-
   // Pokemon whose name ends with "saur"
   const saurEndNames = pokemonNames.filter(name => name.endsWith('saur'))
   saurEndNames.forEach(name => {
@@ -60,6 +42,21 @@ export function orderPokemon(pokemon: any) {
     if (index !== -1) {
       const pokemon = pokemonNames.splice(index, 1)
       pokemonNames.push(pokemon[0])
+    }
+  })
+
+  const pikachuIndex = pokemonNames?.indexOf('pikachu')
+  if (pikachuIndex !== -1) {
+    const pikachu = pokemonNames.splice(pikachuIndex, 1)
+    pokemonNames.unshift(pikachu[0])
+  }
+
+  const charStartNames = pokemonNames.filter(name => name.startsWith('char'))
+  charStartNames.forEach(name => {
+    const index = pokemonNames.indexOf(name)
+    if (index !== -1) {
+      const pokemon = pokemonNames.splice(index, 1)
+      pokemonNames.splice(1, 0, pokemon[0])
     }
   })
 

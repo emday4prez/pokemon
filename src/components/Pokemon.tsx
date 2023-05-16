@@ -17,7 +17,7 @@ function Pokemon({ name, img, handleNextOption, handlePreviousOption }: Props) {
         <div className='flex'>
           <div className='flex items-center min-h-full'>
             <button
-              className='shadow-xl p-4 rounded-full cursor-pointer'
+              className='shadow-xl p-4 rounded-full bg-slate-100 cursor-pointer'
               onClick={handlePreviousOption}
             >
               <LeftArrow />
@@ -27,7 +27,7 @@ function Pokemon({ name, img, handleNextOption, handlePreviousOption }: Props) {
           <img src={img} alt={name} />
           <div className='flex items-center min-h-full '>
             <button
-              className='shadow-xl p-4 rounded-full cursor-pointer'
+              className='shadow-xl p-4 rounded-full  bg-slate-100 cursor-pointer'
               onClick={handleNextOption}
             >
               <RightArrow />
