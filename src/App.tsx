@@ -1,7 +1,7 @@
 import './App.css'
 
 import { listPokemon, loadPokemon } from '../src/libs/pokeapi'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Pokemon from './components/Pokemon'
 import { orderPokemon } from './libs/order'
 
@@ -19,23 +19,28 @@ function App() {
     name: '',
     sprites: { front_default: null },
   })
-  const [orderedPokemonData, setOrderedPokemonData] = useState<{ name: string; url: string }[]>([])
+
+  const orderedPokemonData = useMemo(() => {
+    return orderPokemon(pokemon).map((name: string) => {
+      const pokemonObject = pokemon.results.find((poke: any) => poke.name === name)
+      return {
+        name: pokemonObject.name,
+        url: pokemonObject.url,
+      }
+    })
+  }, [pokemon])
 
   useEffect(() => {
     listPokemon().then(data => {
       setPokemon(data)
-      const orderedPokemonNames = orderPokemon(data)
-      const orderedPokemonData = orderedPokemonNames.map(name => {
-        const pokemonObject = data.results.find((poke: any) => poke.name === name)
-        return {
-          name: pokemonObject.name,
-          url: pokemonObject.url,
-        }
-      })
-      setOrderedPokemonData(orderedPokemonData)
-      setSelectedPokemonURL(orderedPokemonData[0]?.url)
     })
   }, [])
+
+  useEffect(() => {
+    if (orderedPokemonData.length > 0) {
+      setSelectedPokemonURL(orderedPokemonData[0]?.url)
+    }
+  }, [orderedPokemonData])
 
   useEffect(() => {
     if (selectedPokemonURL) {
@@ -49,13 +54,17 @@ function App() {
   }, [selectedPokemonURL])
 
   const handleNextOption = () => {
-    const currentIndex = orderedPokemonData.findIndex(pokemon => pokemon.url === selectedPokemonURL)
+    const currentIndex = orderedPokemonData.findIndex(
+      (pokemon: (typeof orderedPokemonData)[number]) => pokemon.url === selectedPokemonURL
+    )
     const nextIndex = (currentIndex + 1) % orderedPokemonData.length
     setSelectedPokemonURL(orderedPokemonData[nextIndex].url)
   }
 
   const handlePreviousOption = () => {
-    const currentIndex = orderedPokemonData.findIndex(pokemon => pokemon.url === selectedPokemonURL)
+    const currentIndex = orderedPokemonData.findIndex(
+      (pokemon: (typeof orderedPokemonData)[number]) => pokemon.url === selectedPokemonURL
+    )
     const previousIndex = (currentIndex - 1 + orderedPokemonData.length) % orderedPokemonData.length
     setSelectedPokemonURL(orderedPokemonData[previousIndex].url)
   }
