@@ -15,6 +15,7 @@ type LoadedPokemon = {
 function App() {
   const [pokemon, setPokemon] = useState<any>({})
   const [selectedPokemonURL, setSelectedPokemonURL] = useState('')
+  const [loading, setLoading] = useState(true)
   const [loadedPokemon, setLoadedPokemon] = useState<LoadedPokemon>({
     name: '',
     sprites: { front_default: null },
@@ -33,8 +34,10 @@ function App() {
   }, [pokemon])
 
   useEffect(() => {
+    setLoading(true)
     listPokemon().then(data => {
       setPokemon(data)
+      setLoading(false)
     })
   }, [])
 
@@ -80,13 +83,17 @@ function App() {
       <div className='w-[75%] flex flex-col items-center rounded-xl shadow-xl border-4 border-indigo-300 bg-zinc-100 p-8'>
         <h1 className='text-3xl font-bold underline'>Pokémon</h1>
         <div className='flex flex-col text-center items-center'>
-          <Pokemon
-            setSelectedPokemonURL={setSelectedPokemonURL}
-            handlePreviousOption={handlePreviousOption}
-            handleNextOption={handleNextOption}
-            name={loadedPokemon.name}
-            img={loadedPokemon.sprites.front_default || ''}
-          />
+          {loading ? (
+            <div className='text-4xl'>loading...</div>
+          ) : (
+            <Pokemon
+              setSelectedPokemonURL={setSelectedPokemonURL}
+              handlePreviousOption={handlePreviousOption}
+              handleNextOption={handleNextOption}
+              name={loadedPokemon.name}
+              img={loadedPokemon.sprites.front_default || ''}
+            />
+          )}
           <select
             onChange={onSelect}
             className='w-1/3 cursor-pointer'
