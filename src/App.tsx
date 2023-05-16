@@ -37,7 +37,7 @@ type LoadedPokemon = {
 
 function App() {
   const [pokemon, setPokemon] = useState<any>({})
-  const [selectedPokemonURL, setSelectedPokemonURL] = useState(null)
+  const [selectedPokemonURL, setSelectedPokemonURL] = useState('')
   const [loadedPokemon, setLoadedPokemon] = useState<LoadedPokemon>({ name: '', image: '' })
 
   const onSelect = (e: any) => {
@@ -81,6 +81,9 @@ function App() {
             img={loadedPokemon.image}
           />
           <select onChange={onSelect} className='w-1/3 cursor-pointer' name='pokemon' id='pokemon'>
+            <option value='' selected disabled hidden>
+              Choose here
+            </option>
             {pokemon?.results?.map((poke: any) => {
               return (
                 <option value={poke.url} key={poke.name}>
