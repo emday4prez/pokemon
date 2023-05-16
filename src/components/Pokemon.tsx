@@ -4,9 +4,18 @@ import RightArrow from './RightArrow'
 type Props = {
   name: string
   img: string
+  setSelectedPokemonURL: React.Dispatch<React.SetStateAction<string>>
+  handlePreviousOption: () => void | null
+  handleNextOption: () => void | null
 }
 
-function Pokemon({ name, img }: Props) {
+function Pokemon({
+  name,
+  img,
+  setSelectedPokemonURL,
+  handleNextOption,
+  handlePreviousOption,
+}: Props) {
   return (
     <div className='p-8 mt-8'>
       <div className=''>

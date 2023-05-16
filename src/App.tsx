@@ -1,5 +1,5 @@
 import './App.css'
-import { Mockup } from './components/mockup'
+
 import { listPokemon, loadPokemon } from '../src/libs/pokeapi'
 import { useState, useEffect } from 'react'
 import Pokemon from './components/Pokemon'
@@ -30,35 +30,57 @@ import Pokemon from './components/Pokemon'
  *     based on what they defined as their strength based on the following
  *     criteria, listed in `src/libs/order.ts`
  */
+type LoadedPokemon = {
+  name: string
+  image: string
+}
 
 function App() {
   const [pokemon, setPokemon] = useState<any>({})
-  const [selectedPokemon, setSelectedPokemon] = useState(null)
-  const [loadedPokemon, setLoadedPokemon] = useState({})
+  const [selectedPokemonURL, setSelectedPokemonURL] = useState(null)
+  const [loadedPokemon, setLoadedPokemon] = useState<LoadedPokemon>({ name: '', image: '' })
+
   const onSelect = (e: any) => {
-    setSelectedPokemon(e.target.value)
-    console.log('selected pokemon', selectedPokemon)
+    setSelectedPokemonURL(e.target.value)
   }
   useEffect(() => {
     listPokemon().then(data => {
       setPokemon(data)
-      setSelectedPokemon(data.results?.[0].url)
+      setSelectedPokemonURL(data.results?.[0].url)
     })
   }, [])
 
   useEffect(() => {
-    if (selectedPokemon) {
-      loadPokemon(selectedPokemon).then(loadedData => setLoadedPokemon(loadedData))
+    if (selectedPokemonURL) {
+      loadPokemon(selectedPokemonURL).then(loadedData => setLoadedPokemon(loadedData))
     }
-  }, [selectedPokemon])
+  }, [selectedPokemonURL])
+
+  const handleNextOption = () => {
+    const currentIndex = pokemon.results.findIndex((poke: any) => poke.url === selectedPokemonURL)
+    const nextIndex = (currentIndex + 1) % pokemon.results.length
+    setSelectedPokemonURL(pokemon.results[nextIndex].url)
+  }
+
+  const handlePreviousOption = () => {
+    const currentIndex = pokemon.results.findIndex((poke: any) => poke.url === selectedPokemonURL)
+    const previousIndex = (currentIndex - 1 + pokemon.results.length) % pokemon.results.length
+    setSelectedPokemonURL(pokemon.results[previousIndex].url)
+  }
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen'>
-      <div className='w-[75%] flex flex-col items-center  border-4 border-indigo-500 p-8'>
+      <div className='w-[75%] flex flex-col items-center rounded-xl shadow-xl border-4 border-indigo-300 p-8'>
         <h1 className='text-3xl font-bold underline'>Pokémon</h1>
-        <div>
-          <Pokemon name={loadedPokemon.name} img={loadedPokemon.image} />
-          <select onChange={onSelect} className='w-1/3' name='pokemon' id='pokemon'>
+        <div className='flex flex-col text-center items-center'>
+          <Pokemon
+            setSelectedPokemonURL={setSelectedPokemonURL}
+            handlePreviousOption={handlePreviousOption}
+            handleNextOption={handleNextOption}
+            name={loadedPokemon.name}
+            img={loadedPokemon.image}
+          />
+          <select onChange={onSelect} className='w-1/3 cursor-pointer' name='pokemon' id='pokemon'>
             {pokemon?.results?.map((poke: any) => {
               return (
                 <option value={poke.url} key={poke.name}>
