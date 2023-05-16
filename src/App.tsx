@@ -3,6 +3,7 @@ import './App.css'
 import { listPokemon, loadPokemon } from '../src/libs/pokeapi'
 import { useState, useEffect } from 'react'
 import Pokemon from './components/Pokemon'
+import { orderPokemon } from './libs/order'
 /**
  * Instructions:
  *
@@ -56,6 +57,22 @@ function App() {
     }
   }, [selectedPokemonURL])
 
+  useEffect(() => {
+    // Order the Pokemon names based on the requirements
+    const orderedPokemon = orderPokemon(pokemon)
+
+    // Find the URL of the selected Pokemon in the ordered list
+    const selectedURL = orderedPokemon.find((name: any) => name === selectedPokemonURL)
+
+    if (selectedURL) {
+      // If the selected Pokemon URL exists in the ordered list, update the state
+      setSelectedPokemonURL(selectedURL)
+    } else {
+      // If the selected Pokemon URL doesn't exist, select the first Pokemon in the ordered list
+      setSelectedPokemonURL(orderedPokemon[0])
+    }
+  }, [pokemon])
+
   const handleNextOption = () => {
     const currentIndex = pokemon.results.findIndex((poke: any) => poke.url === selectedPokemonURL)
     const nextIndex = (currentIndex + 1) % pokemon.results.length
@@ -81,9 +98,6 @@ function App() {
             img={loadedPokemon.image}
           />
           <select onChange={onSelect} className='w-1/3 cursor-pointer' name='pokemon' id='pokemon'>
-            <option value='' selected disabled hidden>
-              Choose here
-            </option>
             {pokemon?.results?.map((poke: any) => {
               return (
                 <option value={poke.url} key={poke.name}>
