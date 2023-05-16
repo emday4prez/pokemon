@@ -1,62 +1,51 @@
-/**
- * Order Pokemon, strongest to weakest:
- *
- *  - Pikachu (always #1)
- *  - Pokemon whos name starts with "char"
- *  - Pokemon whos name ends with "saur"
- *  - All pokemon who don't match any criteria
- *  - Pokemon whos name ends in "chu"
- */
-export function orderPokemon(pokemon: any) {
+export function orderPokemon(pokemon: any): string[] {
   if (!pokemon.results) {
-    return [] // Return an empty array if pokemonData.results is undefined or null
+    return []
   }
-  const pokemonNames = pokemon?.results?.map((poke: any) => poke.name)
 
-  // Pokemon whose name ends with "saur"
-  const saurEndNames = pokemonNames.filter(name => name.endsWith('saur'))
-  saurEndNames.forEach(name => {
+  const pokemonNames: string[] = pokemon.results.map((poke: any) => poke.name)
+
+  const saurEndNames: string[] = pokemonNames.filter((name: string) => name.endsWith('saur'))
+  saurEndNames.forEach((name: string) => {
     const index = pokemonNames.indexOf(name)
     if (index !== -1) {
-      const pokemon = pokemonNames.splice(index, 1)
-      pokemonNames.splice(2, 0, pokemon[0])
+      const pokemonName = pokemonNames.splice(index, 1)[0]
+      pokemonNames.splice(2, 0, pokemonName)
     }
   })
 
-  // All pokemon who don't match any criteria
-  const remainingNames = pokemonNames.filter(
-    name => !name.startsWith('char') && !name.endsWith('saur')
+  const remainingNames: string[] = pokemonNames.filter(
+    (name: string) => !name.startsWith('char') && !name.endsWith('saur')
   )
-  remainingNames.forEach(name => {
+  remainingNames.forEach((name: string) => {
     const index = pokemonNames.indexOf(name)
     if (index !== -1) {
-      const pokemon = pokemonNames.splice(index, 1)
-      pokemonNames.push(pokemon[0])
+      const pokemonName = pokemonNames.splice(index, 1)[0]
+      pokemonNames.push(pokemonName)
     }
   })
 
-  // Pokemon whose name ends in "chu"
-  const chuEndNames = pokemonNames.filter(name => name.endsWith('chu'))
-  chuEndNames.forEach(name => {
+  const chuEndNames: string[] = pokemonNames.filter((name: string) => name.endsWith('chu'))
+  chuEndNames.forEach((name: string) => {
     const index = pokemonNames.indexOf(name)
     if (index !== -1) {
-      const pokemon = pokemonNames.splice(index, 1)
-      pokemonNames.push(pokemon[0])
+      const pokemonName = pokemonNames.splice(index, 1)[0]
+      pokemonNames.push(pokemonName)
     }
   })
 
-  const pikachuIndex = pokemonNames?.indexOf('pikachu')
+  const pikachuIndex = pokemonNames.indexOf('pikachu')
   if (pikachuIndex !== -1) {
-    const pikachu = pokemonNames.splice(pikachuIndex, 1)
-    pokemonNames.unshift(pikachu[0])
+    const pikachu = pokemonNames.splice(pikachuIndex, 1)[0]
+    pokemonNames.unshift(pikachu)
   }
 
-  const charStartNames = pokemonNames.filter(name => name.startsWith('char'))
-  charStartNames.forEach(name => {
+  const charStartNames: string[] = pokemonNames.filter((name: string) => name.startsWith('char'))
+  charStartNames.forEach((name: string) => {
     const index = pokemonNames.indexOf(name)
     if (index !== -1) {
-      const pokemon = pokemonNames.splice(index, 1)
-      pokemonNames.splice(1, 0, pokemon[0])
+      const pokemonName = pokemonNames.splice(index, 1)[0]
+      pokemonNames.splice(1, 0, pokemonName)
     }
   })
 

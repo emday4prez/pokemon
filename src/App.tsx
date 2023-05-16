@@ -22,7 +22,9 @@ function App() {
 
   const orderedPokemonData = useMemo(() => {
     return orderPokemon(pokemon).map((name: string) => {
-      const pokemonObject = pokemon.results.find((poke: any) => poke.name === name)
+      const pokemonObject = pokemon.results.find(
+        (poke: { name: string; url: string }) => poke.name === name
+      )
       return {
         name: pokemonObject.name,
         url: pokemonObject.url,
@@ -47,11 +49,15 @@ function App() {
       loadPokemon(selectedPokemonURL).then(loadedData => {
         setLoadedPokemon({
           name: loadedData.name,
-          sprites: { front_default: loadedData.image },
+          sprites: { front_default: loadedData.image || null },
         })
       })
     }
   }, [selectedPokemonURL])
+
+  const onSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedPokemonURL(e.target.value)
+  }
 
   const handleNextOption = () => {
     const currentIndex = orderedPokemonData.findIndex(
@@ -79,15 +85,16 @@ function App() {
             handlePreviousOption={handlePreviousOption}
             handleNextOption={handleNextOption}
             name={loadedPokemon.name}
-            img={loadedPokemon.sprites.front_default}
+            img={loadedPokemon.sprites.front_default || ''}
           />
           <select
-            onChange={e => setSelectedPokemonURL(e.target.value)}
+            onChange={onSelect}
             className='w-1/3 cursor-pointer'
             name='pokemon'
             id='pokemon'
+            value={selectedPokemonURL}
           >
-            {orderedPokemonData.map(poke => (
+            {orderedPokemonData.map((poke: { name: string; url: string }) => (
               <option value={poke.url} key={poke.name}>
                 {poke.name}
               </option>
