@@ -13,7 +13,7 @@ function Pokemon({ name, img, handleNextOption, handlePreviousOption }: Props) {
   return (
     <div className='p-8 mt-8'>
       <div className=''>
-        <h2 className='text-xl font-bold'>{name}</h2>
+        <h2 className='text-xl font-bold'>{name.charAt(0).toUpperCase() + name.slice(1)}</h2>
         <div className='flex'>
           <div className='flex items-center min-h-full'>
             <button

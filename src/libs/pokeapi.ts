@@ -1,7 +1,6 @@
 /**
  * Returns Pokémon in format: `{ name, url }`
  */
-import { useState, useEffect } from 'react'
 
 export async function listPokemon() {
   const url = 'https://pokeapi.co/api/v2/pokemon?limit=25&offset=0'

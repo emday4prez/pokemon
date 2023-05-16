@@ -103,7 +103,7 @@ function App() {
           >
             {orderedPokemonData.map((poke: { name: string; url: string }) => (
               <option value={poke.url} key={poke.name}>
-                {poke.name}
+                {poke.name.charAt(0).toUpperCase() + poke.name.slice(1)}
               </option>
             ))}
           </select>
